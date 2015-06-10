@@ -81,7 +81,16 @@ def strip_accents(s):
     return nlinea
 #fin lectura y limpieza
 
-
+def quitar_puntuacion(linea):
+    exclude1 = set(string.punctuation)
+    exclude = set()
+    while len(exclude1) > 0:
+        i = exclude1.pop()
+        if not i == ',':
+            if not i == '"':
+                exclude.add(i)
+    word = ''.join(ch for ch in linea if ch not in exclude)
+    return word
 
 
 

@@ -92,8 +92,12 @@ def quitar_puntuacion(linea):
     word = ''.join(ch for ch in linea if ch not in exclude)
     return word
 
-
-
+def imprimir_archivo(lineas, nombreArch):
+    archEscritura = open(nombreArch, 'w')
+    for lin in lineas:
+        archEscritura.write(lin)
+        archEscritura.write("\n")
+    archEscritura.closed
 
 
 

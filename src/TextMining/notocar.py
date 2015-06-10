@@ -44,7 +44,7 @@ def validarComillas(linea):
 def limpiarLinea(linea,numeroCampos): #se limpia una linea
     print linea
     nuevaLinea=""
-    nCampos=0
+    nCampos=1
     primero=True
     linea=linea.strip() #campo sin espacios
     #linea convertir ,   " ==  ,"
@@ -93,9 +93,11 @@ def limpiarLinea(linea,numeroCampos): #se limpia una linea
     nuevaLinea+=campo
     print campo
     print nuevaLinea
+    print nCampos
     if (nCampos==numeroCampos):
         return nuevaLinea
     else:
+       
         return -1
     return nuevaLinea
 

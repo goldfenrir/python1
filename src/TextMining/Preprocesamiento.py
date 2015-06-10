@@ -1,7 +1,4 @@
-#!/usr/bin/python -i
-"""Para ejecutar el programa por terminal
-https://pypi.python.org/pypi/nltk
-"""
+
 from nltk.stem.snowball import SnowballStemmer
 from textblob import TextBlob
 from textblob import Word
@@ -42,28 +39,29 @@ def validarComillas(linea):
     
         
 def limpiarLinea(linea,numeroCampos): #se limpia una linea
+    linea=quitar_campo1_2(linea)
     print linea
     nuevaLinea=""
-    nCampos=0
+    nCampos=1
     primero=True
     linea=linea.strip() #campo sin espacios
     #linea convertir ,   " ==  ,"
     #linea = linea sin acentos
     #linea = linea sin puntuacino menos comillas y comas \n
     if(validarComillas(linea)==False):
-        print "cayo validarComillas"
+        #print "cayo validarComillas"
         return -1
     i=0
     f=0
     
     while (f<len(linea)-1):
         
-        print ("f: ",f)
+        
         
         if (linea[f]=="," and linea[f+1]=="\""):
             nCampos+=1
             campo=linea[i:f]
-            print campo
+            #print campo
             if (quitarComilla(campo)!=-1):
                 campo=quitarComilla(campo)
             else:
@@ -75,24 +73,24 @@ def limpiarLinea(linea,numeroCampos): #se limpia una linea
             else:
                 nuevaLinea+=campo
                 primero=False
-            print campo
-            print nuevaLinea
+            #print campo
+            #print nuevaLinea
             i=f+1
         f+=1
     
     f+=1
     nCampos+=1
     campo=linea[i:f]
-    print campo
+    #print campo
     if (quitarComilla(campo)!=-1):
         campo=quitarComilla(campo)
     else:
-        print "cayo ultima validacion"
+        #print "cayo ultima validacion"
         return -1
     nuevaLinea+=","
     nuevaLinea+=campo
-    print campo
-    print nuevaLinea
+    #print campo
+    #print nuevaLinea
     if (nCampos==numeroCampos):
         return nuevaLinea
     else:
@@ -100,7 +98,7 @@ def limpiarLinea(linea,numeroCampos): #se limpia una linea
     return nuevaLinea
 
 
-def arreglo_ofertas(archEscritura):
+def arreglo_ofertas(archLectura):
 	lineas = archLectura.readlines()
 	nuevaLinea = ""
 	nuevaLinea += lineas[0]
@@ -118,12 +116,17 @@ def arreglo_ofertas(archEscritura):
 	return arregloLineas
 
 def quitar_campo1_2(oferta):
+   
     linea = ""
-    linea = oferta[oferta.find(','):]
+    linea = oferta[1+oferta.find(','):]
+ 
     clase = ""
     clase = linea[:linea.find(',')]
-    linea = linea[linea.find(','):]
-    linea = linea[linea.find(','):]
+    
+    linea = linea[1+linea.find(','):]
+
+    linea = linea[1+linea.find(','):]
+
     nLinea = ""
     nLinea += clase
     nLinea +=","
@@ -153,6 +156,24 @@ def quitar_puntuacion(linea):
     return word
 
 
-lineas=arreglo_ofertas("TA_Registros_etiquetados.csv")
-print lineas
+#print limpiarLinea("1,1,1231,iop,\"d,e,s,c\",\"re,q,u,i\"",4)
+
+
+archLectura = open("TA_Registros_etiquetados.csv")
+lineas = arreglo_ofertas(archLectura)
+#print lineas[0]
+print quitar_campo1_2(lineas[0])
+"""
+arregloLineas = []
+arregloLineasEliminadas = []
+for linea in lineas:
+    
+    if (limpiarLinea(linea,4)!=-1):
+        arregloLineas.append(limpiarLinea(linea,4))
+    else:
+        arregloLineasEliminadas.append(linea)
+        print "Linea eliminada"
+"""
+
+
 #print limpiarLinea("1,iop,\"d,e,s,c\",\"re,q,u,i\"",4)

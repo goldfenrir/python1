@@ -1,10 +1,10 @@
-
+import unicodedata
 from nltk.stem.snowball import SnowballStemmer
 from textblob import TextBlob
 from textblob import Word
 from nltk.corpus import stopwords
- 	
 
+import codecs
 import math
 import string
 #definiciones
@@ -29,6 +29,7 @@ def quitarComilla(campo):  #quitar comas dentro de un campo con comillas
 def validarComillas(linea):
     nComillas=0
     comillasPares=True
+   
     #omillasValidas=True
     for c in linea:
         if (c=="\""):
@@ -62,10 +63,35 @@ def quitarComillasPuestoClase(linea):
     nLinea+=","
     nLinea+=linea
     return nLinea
+def stopWordStem(linea):
+    blob=TextBlob(linea.decode('utf-8'))
+    words=blob.words
+    comentarios=""
+    stemmer = SnowballStemmer("spanish")
+    primero=True
+    for word in words:    
+        if word not in (stopwords.words('spanish')):#Elimnimar Stop words
+            w=Word(word)        
+            if (primero):
+                comentarios+=(stemmer.stem(w.lower()))
+                primero=False
+            else:
+                comentarios+=" "
+                comentarios+=(stemmer.stem(w.lower()))
+            
     
+    
+    return comentarios
+    
+    
+def quitarDobleComa(linea):
+    return linea.replace(",,", ",")  
+
 def limpiarLinea(linea,numeroCampos): #se limpia una linea
+    linea=quitarDobleComa(linea)
     #print linea
     linea=quitar_campo1_2(linea)
+    #print linea
     linea=quitarComillasPuestoClase(linea)
     #print linea
     nuevaLinea=""
@@ -73,8 +99,11 @@ def limpiarLinea(linea,numeroCampos): #se limpia una linea
     primero=True
     
     linea=linea.strip() #campo sin espacios
-    #linea convertir ,   " ==  ,"
-    #linea = linea sin acentos
+    
+    
+   
+    linea=strip_accents(linea) #linea = linea sin acentos
+  
     
     linea = quitar_puntuacion(linea)
     
@@ -99,6 +128,7 @@ def limpiarLinea(linea,numeroCampos): #se limpia una linea
             
             if (quitarComilla(campo)!=-1):
                 campo=quitarComilla(campo)
+                campo=stopWordStem(campo)
             else:
                 #print "callo"
                 return -1
@@ -119,6 +149,7 @@ def limpiarLinea(linea,numeroCampos): #se limpia una linea
     #print campo
     if (quitarComilla(campo)!=-1):
         campo=quitarComilla(campo)
+        campo=stopWordStem(campo)
     else:
         #print "cayo ultima validacion"
         return -1
@@ -177,14 +208,19 @@ def strip_accents(s):
     nlinea = linea.encode('ascii', 'ignore')
     nlinea = str(nlinea)
     return nlinea
+
 #fin lectura y limpieza
 def imprimir_archivo(lineas, nombreArch):
-    archEscritura = open(nombreArch, 'w')
+    archEscritura=codecs.open(nombreArch, "w", "utf-8")
+    #with codecs.open("test_output", "w", "utf-8") as archEscritura:
+    #archEscritura = open(nombreArch, "w", "utf-8")
     for lin in lineas:
-        archEscritura.write(lin)
-        archEscritura.write("\n")
+            archEscritura.write(lin.decode("utf-8"))
+            archEscritura.write("\n")
     archEscritura.closed
+        
 def quitar_puntuacion(linea):
+    
     exclude1 = set(string.punctuation)
     exclude = set()
     while len(exclude1) > 0:
@@ -204,8 +240,9 @@ lineas = arreglo_ofertas(archLectura)
 #print lineas[0]
 #print quitar_campo1_2(lineas[0])
 #
-#print limpiarLinea(lineas[21],4)
+#print limpiarLinea(lineas[155],4)
 #print quitarComillasPuestoClase
+#print strip_accents("aa")
 
 contador=0
 contadorEliminados=0
@@ -217,9 +254,11 @@ for linea in lineas:
         arregloLineas.append(limpiarLinea(linea,4))
         contador+=1
     else:
+        
         arregloLineasEliminadas.append(linea)
         contadorEliminados+=1
-        print "Linea eliminada"
+        print "Linea eliminada "
+        
 
 print contador
 print contadorEliminados

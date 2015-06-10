@@ -14,6 +14,7 @@ def noComillas(campo):
             return False
     return True
 def quitarComilla(campo):  #quitar comas dentro de un campo con comillas
+    #if (campo==""): campo
     if (noComillas(campo)):
         return campo
     flagComilla=0
@@ -37,35 +38,69 @@ def validarComillas(linea):
     else: comillasPares=False
     return  (comillasPares)
     
+def quitarComillasPuestoClase(linea):   
+    nLinea=""
+    clase=""
+    puesto=""
+    if (linea[0]=="\""):
+        clase=linea[1]  
+        linea=linea[4:]
+    else:
+        clase=linea[0]
+        linea=linea[2:]
         
+    if (linea[0]=="\""):
+        puesto=linea[1:linea.find("\"")]  
+        linea=linea[linea.find(",")+1:]
+    else:
+        puesto=linea[0:linea.find(",")]
+        linea=linea[linea.find(",")+1:]
+        
+    nLinea+=clase
+    nLinea+=","
+    nLinea+=puesto   
+    nLinea+=","
+    nLinea+=linea
+    return nLinea
+    
 def limpiarLinea(linea,numeroCampos): #se limpia una linea
+    #print linea
     linea=quitar_campo1_2(linea)
-    print linea
+    linea=quitarComillasPuestoClase(linea)
+    #print linea
     nuevaLinea=""
-    nCampos=1
+    nCampos=0
     primero=True
+    
     linea=linea.strip() #campo sin espacios
     #linea convertir ,   " ==  ,"
     #linea = linea sin acentos
-    #linea = linea sin puntuacino menos comillas y comas \n
+    
+    linea = quitar_puntuacion(linea)
+    
+    linea=linea.translate(None, '\n')
+    
     if(validarComillas(linea)==False):
+        
         #print "cayo validarComillas"
         return -1
     i=0
     f=0
-    
-    while (f<len(linea)-1):
+    #print len(linea)
+    while (f<len(linea)):
         
         
-        
-        if (linea[f]=="," and linea[f+1]=="\""):
+        #print f
+        if (linea[f]=="," and ((nCampos==2 and 
+        (noComillas(linea[f:] or f+2==len(linea)) )) or linea[f+1]=="\"" or nCampos<2)):
             nCampos+=1
             campo=linea[i:f]
             #print campo
+            
             if (quitarComilla(campo)!=-1):
                 campo=quitarComilla(campo)
             else:
-                
+                #print "callo"
                 return -1
             if (primero==False):
                 nuevaLinea+=","
@@ -143,7 +178,12 @@ def strip_accents(s):
     nlinea = str(nlinea)
     return nlinea
 #fin lectura y limpieza
-
+def imprimir_archivo(lineas, nombreArch):
+    archEscritura = open(nombreArch, 'w')
+    for lin in lineas:
+        archEscritura.write(lin)
+        archEscritura.write("\n")
+    archEscritura.closed
 def quitar_puntuacion(linea):
     exclude1 = set(string.punctuation)
     exclude = set()
@@ -162,18 +202,28 @@ def quitar_puntuacion(linea):
 archLectura = open("TA_Registros_etiquetados.csv")
 lineas = arreglo_ofertas(archLectura)
 #print lineas[0]
-print quitar_campo1_2(lineas[0])
-"""
+#print quitar_campo1_2(lineas[0])
+#
+#print limpiarLinea(lineas[21],4)
+#print quitarComillasPuestoClase
+
+contador=0
+contadorEliminados=0
 arregloLineas = []
 arregloLineasEliminadas = []
 for linea in lineas:
     
     if (limpiarLinea(linea,4)!=-1):
         arregloLineas.append(limpiarLinea(linea,4))
+        contador+=1
     else:
         arregloLineasEliminadas.append(linea)
+        contadorEliminados+=1
         print "Linea eliminada"
+
+print contador
+print contadorEliminados
+imprimir_archivo(arregloLineas,"limpio.csv")
+imprimir_archivo(arregloLineasEliminadas,"eliminados.csv")
 """
-
-
-#print limpiarLinea("1,iop,\"d,e,s,c\",\"re,q,u,i\"",4)
+#print limpiarLinea("1,iop,\"d,e,s,c\",\"re,q,u,i\"",4)"""

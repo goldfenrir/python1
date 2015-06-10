@@ -24,13 +24,19 @@ def quitarComilla(campo):  #quitar comas dentro de un campo con comillas
     return -1
 
 def limpiarLinea(linea): #se limpia una linea
+    nCampos=0
     linea=linea.strip() #campo sin espacios
     #linea = linea sin acentos
-    #linea = linea sin puntuacino menos comillas y comas
+    #linea = linea sin puntuacino menos comillas y comas \n
+    
     for x in range(0,len(linea)-1):
         if (linea[x]=="," and linea[x+1]!="\""):
-            
+            nCampos=1
     
+    if (nCampos==6):
+        return linea
+    else:
+        return -1
     return linea
 
 

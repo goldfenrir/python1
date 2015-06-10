@@ -34,7 +34,22 @@ def limpiarLinea(linea): #se limpia una linea
     return linea
 
 
-
+def arreglo_ofertas(archEscritura):
+	lineas = archLectura.readlines()
+	nuevaLinea = ""
+	nuevaLinea += lineas[0]
+	arregloLineas = []
+	count = 1
+	while count < len(lineas):
+		puesto = lineas[count].split(',')
+		#if puesto[0].isdigit() and puesto[1].isdigit() and puesto[2].isdigit():
+		if puesto[0].isdigit():
+			arregloLineas.append(nuevaLinea)
+			nuevaLinea = ""
+		nuevaLinea += lineas[count]
+		count += 1
+	arregloLineas.append(nuevaLinea)
+	return arregloLineas
 
 
 #Lectura y limpieza

@@ -57,7 +57,18 @@ def arreglo_ofertas(archEscritura):
 	arregloLineas.append(nuevaLinea)
 	return arregloLineas
 
-
+def quitar_campo1_2(oferta):
+    linea = ""
+    linea = oferta[oferta.find(','):]
+    clase = ""
+    clase = linea[:linea.find(',')]
+    linea = linea[linea.find(','):]
+    linea = linea[linea.find(','):]
+    nLinea = ""
+    nLinea += clase
+    nLinea +=","
+    nLinea += linea
+    return nLinea
 #Lectura y limpieza
 #Quitamos todos los caracteres de puntuacion
 

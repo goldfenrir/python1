@@ -40,7 +40,7 @@ def limpiarLinea(linea): #se limpia una linea
     return linea
 
 
-def arreglo_ofertas(archEscritura):
+def arreglo_ofertas(archLectura):
 	lineas = archLectura.readlines()
 	nuevaLinea = ""
 	nuevaLinea += lineas[0]

@@ -100,4 +100,59 @@ def limpiarLinea(linea,numeroCampos): #se limpia una linea
     return nuevaLinea
 
 
-print limpiarLinea("1,iop,\"d,e,s,c\",\"re,q,u,i\"",4)
+def arreglo_ofertas(archEscritura):
+	lineas = archLectura.readlines()
+	nuevaLinea = ""
+	nuevaLinea += lineas[0]
+	arregloLineas = []
+	count = 1
+	while count < len(lineas):
+		puesto = lineas[count].split(',')
+		#if puesto[0].isdigit() and puesto[1].isdigit() and puesto[2].isdigit():
+		if puesto[0].isdigit():
+			arregloLineas.append(nuevaLinea)
+			nuevaLinea = ""
+		nuevaLinea += lineas[count]
+		count += 1
+	arregloLineas.append(nuevaLinea)
+	return arregloLineas
+
+def quitar_campo1_2(oferta):
+    linea = ""
+    linea = oferta[oferta.find(','):]
+    clase = ""
+    clase = linea[:linea.find(',')]
+    linea = linea[linea.find(','):]
+    linea = linea[linea.find(','):]
+    nLinea = ""
+    nLinea += clase
+    nLinea +=","
+    nLinea += linea
+    return nLinea
+#Lectura y limpieza
+#Quitamos todos los caracteres de puntuacion
+
+def strip_accents(s): 
+    res = s.decode('utf-8')
+    linea = ''.join(c for c in unicodedata.normalize('NFD', res) 
+        if unicodedata.category(c) != 'Mn')
+    nlinea = linea.encode('ascii', 'ignore')
+    nlinea = str(nlinea)
+    return nlinea
+#fin lectura y limpieza
+
+def quitar_puntuacion(linea):
+    exclude1 = set(string.punctuation)
+    exclude = set()
+    while len(exclude1) > 0:
+        i = exclude1.pop()
+        if not i == ',':
+            if not i == '"':
+                exclude.add(i)
+    word = ''.join(ch for ch in linea if ch not in exclude)
+    return word
+
+
+lineas=arreglo_ofertas("TA_Registros_etiquetados.csv")
+print lineas
+#print limpiarLinea("1,iop,\"d,e,s,c\",\"re,q,u,i\"",4)

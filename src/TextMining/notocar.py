@@ -22,13 +22,27 @@ def quitarComilla(campo):  #quitar comas dentro de un campo con comillas
     else:
         return -1
     return -1
-
+def validarComillas(linea):
+    nComillas=0
+    comillasPares=True
+    comillasValidas=True
+    for c in linea:
+        if (c=="\""):
+            nComillas+=1
+        if (c=="," and (nComillas%2)!=0):
+            comillasValidas=False
+    if ((nComillas%2)==0): comillasPares=True
+    else: comillasPares=False
+    return  (comillasPares and comillasValidas)
+    
+        
 def limpiarLinea(linea): #se limpia una linea
     nCampos=0
     linea=linea.strip() #campo sin espacios
     #linea = linea sin acentos
     #linea = linea sin puntuacino menos comillas y comas \n
-    
+    if(validarComillas("\",a\",")==False):
+        return -1
     for x in range(0,len(linea)-1):
         if (linea[x]=="," and linea[x+1]!="\""):
             nCampos=1

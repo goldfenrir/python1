@@ -72,7 +72,13 @@ def quitar_campo1_2(oferta):
 #Lectura y limpieza
 #Quitamos todos los caracteres de puntuacion
 
-
+def strip_accents(s): 
+    res = s.decode('utf-8')
+    linea = ''.join(c for c in unicodedata.normalize('NFD', res) 
+        if unicodedata.category(c) != 'Mn')
+    nlinea = linea.encode('ascii', 'ignore')
+    nlinea = str(nlinea)
+    return nlinea
 #fin lectura y limpieza
 
 
